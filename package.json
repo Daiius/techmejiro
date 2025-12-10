@@ -1,0 +1,12 @@
+{
+  "name": "techmejiro",
+  "version": "0.0.1",
+  "description": "web technology vote & analysis service, tech for better web, web for better world!",
+  "private": true,
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "Daiji Yamashita",
+  "license": "ISC",
+  "packageManager": "pnpm@10.15.0"
+}

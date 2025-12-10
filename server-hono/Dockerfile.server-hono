@@ -1,0 +1,18 @@
+FROM node:22-slim
+
+WORKDIR /workspace/server-hono
+
+RUN npm install -g pnpm
+
+# monorepo root
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml /workspace/
+# monorepo db
+COPY db/package.json /workspace/db/
+# monorepo nextjs
+COPY server-hono/package.json server-hono/tsconfig.json /workspace/server-hono/
+
+RUN pnpm install
+
+
+CMD ["pnpm", "dev"]
+

@@ -1,0 +1,33 @@
+{
+  "name": "db",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "techmejiro database",
+  "main": "index.js",
+  "scripts": {
+    "gen:auth": "pnpm dlx @better-auth/cli generate --config ./better-auth.config.ts --output ./db/auth-schema.ts"
+  },
+  "exports": {
+    ".": {
+      "import": [
+        "./db/index.ts",
+        "./db/schema.ts"
+      ]
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.15.0",
+  "dependencies": {
+    "better-auth": "^1.4.6",
+    "drizzle-orm": "1.0.0-beta.2-58a4521",
+    "mysql2": "^3.15.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.2",
+    "drizzle-kit": "1.0.0-beta.2-58a4521",
+    "tsx": "^4.21.0"
+  }
+}

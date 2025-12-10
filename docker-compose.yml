@@ -1,0 +1,94 @@
+services:
+  #techmejiro-nextjs:
+  #  build:
+  #    dockerfile: ./next/Dockerfile.nextjs
+  #  container_name: techmejiro-nextjs-dev
+  #  working_dir: /workspace/next
+  #  environment:
+  #    TZ: 'Asia/Tokyo'
+  #  env_file:
+  #    - .env.next
+  #    - .env.db
+  #  ports:
+  #    - 3000:3000
+  #  volumes:
+  #    - ./db:/workspace/db
+  #    - /workspace/db/node_modules
+  #    - ./next:/workspace/next
+  #    - /workspace/next/node_modules
+  #    - ./webrtc:/workspace/webrtc
+  #    - /workspace/webrtc/node_modules
+  #    - /workspace/node_modules
+  #  tmpfs:
+  #    - /workspace/app/.next
+
+  techmejiro-server-hono:
+    build:
+      dockerfile: ./server-hono/Dockerfile.server-hono
+    container_name: techmejiro-server-hono
+    working_dir: /workspace/server-hono
+    env_file:
+      - .env.server-hono
+      - .env.db
+    environment:
+      TZ: "Asia/Tokyo"
+    ports:
+      - 4000:4000
+    volumes:
+      - ./db:/workspace/db
+      # - /workspace/db/node_modules
+      - ./server-hono:/workspace/server-hono
+      # - /workspace/webrtc/node_modules
+      # - /workspace/node_modules
+    depends_on:
+      db-seeder:
+        condition: service_completed_successfully
+
+  db:
+    image: mysql:8.4
+    container_name: techmejiro-db
+    environment:
+      TZ: "Asia/Tokyo"
+      LANG: "ja_JP.UTF-8"
+    env_file:
+      - .env.db
+    tmpfs:
+      - /var/lib/mysql # テスト用、データは毎回削除される
+    cap_add:
+      - SYS_NICE
+    healthcheck:
+      test: mysql -u $$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE -e "select 1;"
+      interval: 5s
+      timeout: 20s
+      retries: 3
+      start_period: 5s
+
+  db-seeder:
+    build:
+      dockerfile: db/Dockerfile.db-seeder
+    container_name: techmejiro-db-seeder
+    working_dir: /workspace/db
+    env_file:
+      - .env.db
+    volumes:
+      - ./db:/workspace/db
+      # - /workspace/db/node_modules
+      # - /workspace/node_modules
+    command: >
+      bash -c '
+        pnpm drizzle-kit push --force \
+             --dialect mysql \
+             --schema=./db/schema.ts \
+             --host=$$DB_HOST \
+             --user=$$MYSQL_USER \
+             --password=$$MYSQL_PASSWORD \
+             --database=$$MYSQL_DATABASE && \
+        pnpm tsx addTestData.ts
+      '
+    depends_on:
+      db:
+        condition: service_healthy
+
+networks:
+  default:
+    name: techmejiro-network
