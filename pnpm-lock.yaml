@@ -32,6 +32,9 @@ importers:
 
   nextjs:
     dependencies:
+      better-auth:
+        specifier: ^1.4.6
+        version: 1.4.6(next@16.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       next:
         specifier: 16.0.8
         version: 16.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
