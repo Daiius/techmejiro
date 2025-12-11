@@ -1,11 +1,6 @@
 "use client";
 
-import { createAuthClient } from "better-auth/client";
-
-const authClient = createAuthClient({
-  baseURL: "http://localhost:4000",
-  basePath: "/api/auth",
-});
+import { authClient } from "@/lib/authClient";
 
 export const SignInButton = () => (
   <button
