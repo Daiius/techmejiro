@@ -7,6 +7,11 @@
     "build": "tsc",
     "start": "node dist/index.js"
   },
+  "exports": {
+    ".": {
+      "types": "./src/route.ts"
+    }
+  },
   "dependencies": {
     "@hono/node-server": "^1.19.6",
     "better-auth": "^1.4.6",

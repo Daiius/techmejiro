@@ -1,26 +1,21 @@
 services:
-  #techmejiro-nextjs:
-  #  build:
-  #    dockerfile: ./next/Dockerfile.nextjs
-  #  container_name: techmejiro-nextjs-dev
-  #  working_dir: /workspace/next
-  #  environment:
-  #    TZ: 'Asia/Tokyo'
-  #  env_file:
-  #    - .env.next
-  #    - .env.db
-  #  ports:
-  #    - 3000:3000
-  #  volumes:
-  #    - ./db:/workspace/db
-  #    - /workspace/db/node_modules
-  #    - ./next:/workspace/next
-  #    - /workspace/next/node_modules
-  #    - ./webrtc:/workspace/webrtc
-  #    - /workspace/webrtc/node_modules
-  #    - /workspace/node_modules
-  #  tmpfs:
-  #    - /workspace/app/.next
+  techmejiro-nextjs:
+    build:
+      dockerfile: ./nextjs/Dockerfile.nextjs
+    container_name: techmejiro-nextjs-dev
+    working_dir: /workspace/nextjs
+    environment:
+      TZ: "Asia/Tokyo"
+    env_file:
+      - .env.nextjs
+    ports:
+      - 3000:3000
+    volumes:
+      - ./db:/workspace/db
+      - ./nextjs:/workspace/nextjs
+      - ./server-hono:/workspace/server-hono
+    tmpfs:
+      - /workspace/app/.next
 
   techmejiro-server-hono:
     build:
@@ -40,9 +35,9 @@ services:
       - ./server-hono:/workspace/server-hono
       # - /workspace/webrtc/node_modules
       # - /workspace/node_modules
-    depends_on:
-      db-seeder:
-        condition: service_completed_successfully
+    # depends_on:
+    #   db-seeder:
+    #     condition: service_completed_successfully
 
   db:
     image: mysql:8.4

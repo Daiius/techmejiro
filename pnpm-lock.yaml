@@ -32,6 +32,12 @@ importers:
 
   nextjs:
     dependencies:
+      better-auth:
+        specifier: ^1.4.6
+        version: 1.4.6(next@16.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      hono:
+        specifier: ^4.10.8
+        version: 4.10.8
       next:
         specifier: 16.0.8
         version: 16.0.8(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -41,6 +47,9 @@ importers:
       react-dom:
         specifier: 19.2.1
         version: 19.2.1(react@19.2.1)
+      server-hono:
+        specifier: workspace:*
+        version: link:../server-hono
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4
