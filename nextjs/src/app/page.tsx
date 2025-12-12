@@ -2,6 +2,7 @@ import { Suspense } from "react";
 
 import { SignInSection } from "@/components/SignInSection";
 import { MejiroOshi } from "@/components/MejiroOshi";
+import { TechList } from "@/components/TechList";
 
 export default async function Home() {
   return (
@@ -9,6 +10,9 @@ export default async function Home() {
       <MejiroOshi count={10} />
       <Suspense>
         <SignInSection />
+      </Suspense>
+      <Suspense>
+        <TechList />
       </Suspense>
     </main>
   );

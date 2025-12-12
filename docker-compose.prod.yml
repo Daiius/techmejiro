@@ -1,0 +1,6 @@
+services:
+  techmejiro-nextjs:
+    command: pnpm prodcheck
+    depends_on:
+      db-seeder:
+        condition: service_completed_successfully

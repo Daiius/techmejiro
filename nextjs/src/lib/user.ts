@@ -3,15 +3,15 @@ import { honoClient } from "@/lib/honoClient";
 
 export const getUser = async () => {
   const cookieHeader = await cookies();
-  const meResponse = await honoClient.me.$get(undefined, {
+  const res = await honoClient.me.$get(undefined, {
     headers: {
       cookie: cookieHeader.toString(),
     },
   });
-  if (!meResponse.ok) {
+  if (!res.ok) {
     return null;
   }
-  const { user } = await meResponse.json();
+  const { user } = await res.json();
 
   return user;
 };

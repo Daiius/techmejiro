@@ -4,7 +4,10 @@
   "description": "web technology vote & analysis service, tech for better web, web for better world!",
   "private": true,
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "dev": "docker compose up --build",
+    "prodcheck": "docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build"
+  },
   "keywords": [],
   "author": "Daiji Yamashita",
   "license": "ISC",
