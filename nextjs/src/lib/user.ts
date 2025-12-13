@@ -9,6 +9,7 @@ export const getUser = async () => {
     },
   });
   if (!res.ok) {
+    // TODO use unique session token name
     return null;
   }
   const { user } = await res.json();
