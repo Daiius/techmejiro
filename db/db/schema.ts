@@ -116,14 +116,17 @@ export const relations = defineRelations(
       user: r.one.user({
         from: r.votes.userId,
         to: r.user.id,
+        optional: false,
       }),
       tech: r.one.techs({
         from: r.votes.techId,
         to: r.techs.id,
+        optional: false,
       }),
       impression: r.one.impressions({
         from: r.votes.impressionId,
         to: r.impressions.id,
+        optional: false,
       }),
     },
   }),

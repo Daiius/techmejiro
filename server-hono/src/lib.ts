@@ -12,4 +12,16 @@ export const getImpressions = async () =>
   await db.query.impressions.findMany({ columns: { key: true, name: true } });
 
 export const getVotesByUserId = async (userId: string) =>
-  await db.query.votes.findMany({ where: { userId } });
+  await db.query.votes.findMany({
+    columns: {},
+    where: { userId },
+    with: {
+      impression: { columns: { name: true, key: true } },
+      tech: {
+        columns: {
+          name: true,
+          key: true,
+        },
+      },
+    },
+  });
