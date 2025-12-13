@@ -1,4 +1,4 @@
-import { techTags, techs, tags } from "./db/schema";
+import { techTags, techs, tags, impressions } from "./db/schema";
 import { db, client } from "./db";
 
 // タグを挿入
@@ -63,5 +63,12 @@ const techTagValues = techTagRelations.flatMap((relation) =>
 
 // 技術とタグの関連付けを挿入
 await db.insert(techTags).values(techTagValues);
+
+await db.insert(impressions).values([
+  //{ key: "unfamiliar", name: "あまり目にしない" },
+  { key: "familiar", name: "よく見る" },
+  { key: "often-use", name: "よく使う" },
+  { key: "favorite", name: "お気に入り" },
+]);
 
 await client.end();

@@ -112,6 +112,9 @@ export const relations = defineRelations(
         to: r.techs.id.through(r.techTags.techId),
       }),
     },
+    impressions: {
+      votes: r.many.votes(),
+    },
     votes: {
       user: r.one.user({
         from: r.votes.userId,
