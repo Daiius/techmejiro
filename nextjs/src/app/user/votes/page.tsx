@@ -19,21 +19,21 @@ export default async function VotesPage() {
       <form>
         <ul className="list">
           {techs.map((tech) => (
-            <li key={tech.key} className="list-row">
-              <div>
+            <li key={tech.key} className="list-row items-center">
+              <div className="flex flex-wrap gap-2">
                 <span className="text-xl">{tech.name}</span>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-1">
                   {tech.tags.map((tag) => (
                     <span
                       key={tag.key}
-                      className="badge badge-outline badge-info text-xs"
+                      className="badge badge-outline badge-info text-xs text-nowrap"
                     >
                       {tag.name}
                     </span>
                   ))}
                 </div>
               </div>
-              <div className="ml-auto flex gap-8">
+              <div className="ml-auto flex flex-col md:flex-row gap-2 md:gap-8">
                 {[
                   { key: "unfamiliar", name: "あまり目にしない" },
                   ...impressions,
