@@ -1,18 +1,8 @@
 "use client";
 
-import { useState } from "react";
-
-import type { getTechs } from "@/lib/techs";
-import type { getVotes } from "@/lib/votes";
-import type { getImpressions } from "@/lib/impressions";
-import { useDebouncedCallback } from "use-debounce";
-
-import { honoClientForClient as honoClient } from "@/lib/honoClient";
-
-type ElementType<T> = T extends (infer U)[] ? U : never;
-type Vote = ElementType<Awaited<ReturnType<typeof getVotes>>>;
-type Impression = ElementType<Awaited<ReturnType<typeof getImpressions>>>;
-type Tech = ElementType<Awaited<ReturnType<typeof getTechs>>>;
+import { useVotesForm } from "@/hooks/useVotesForm";
+import type { Vote, Tech, Impression } from "@/types";
+import { CheckIcon } from "./icons/CheckIcon";
 
 export interface VotesFormClientProps {
   techs: Tech[];
@@ -25,43 +15,9 @@ export const VotesFormClient = ({
   votes: initialVotes,
   impressions,
 }: VotesFormClientProps) => {
-  const [votes, setVotes] = useState(
-    Object.fromEntries(
-      initialVotes.map((vote) => [vote.tech.key, vote.impression.key]),
-    ),
-  );
-  const [updatedVotes, setUpdatedVotes] = useState<{
-    [techKey: string]: string;
-  }>({});
-  const debouncedSubmitUpdatedVotes = useDebouncedCallback(
-    async (votesToSubmit: { [techKey: string]: string }) => {
-      console.log("updating...: ", votesToSubmit);
-      await honoClient.votes.$patch({ json: votesToSubmit });
-      console.log("done!");
-      setUpdatedVotes({});
-    },
-    3_000, // 3 seconds
-  );
-  const handleOnChange = async (
-    newTechKey: string,
-    newImpressionKey: string,
-  ) => {
-    // update local votes data
-    const newVotes = Object.fromEntries([
-      ...Object.entries(votes).filter(([techKey, _]) => techKey !== newTechKey),
-      [newTechKey, newImpressionKey],
-    ]);
-    setVotes(newVotes);
-    const newUpdatedVotes = Object.fromEntries([
-      ...Object.entries(updatedVotes).filter(
-        ([techKey, _]) => techKey !== newTechKey,
-      ),
-      [newTechKey, newImpressionKey],
-    ]);
-    setUpdatedVotes(newUpdatedVotes);
-
-    await debouncedSubmitUpdatedVotes(newUpdatedVotes);
-  };
+  const { votes, handleOnChange, completed, sending } = useVotesForm({
+    initialVotes,
+  });
   return (
     <form>
       <ul className="list">
@@ -92,8 +48,10 @@ export const VotesFormClient = ({
                   <input
                     type="radio"
                     className="radio"
-                    defaultChecked={impression.key === "unfamiliar"}
-                    checked={votes[tech.key] === impression.key}
+                    checked={
+                      votes[tech.key] === impression.key ||
+                      (!(tech.key in votes) && impression.key === "unfamiliar")
+                    }
                     name={`impression-tech-${tech.key}`}
                     value={impression.key}
                     onChange={async (e) => {
@@ -105,6 +63,13 @@ export const VotesFormClient = ({
                   <span>{impression.name}</span>
                 </label>
               ))}
+            </div>
+            <div className="min-w-6">
+              {sending.includes(tech.key) ? (
+                <span className="loading loading-spinner size-6 text-base-content/50" />
+              ) : completed.includes(tech.key) ? (
+                <CheckIcon className="size-6 text-success" />
+              ) : null}
             </div>
           </li>
         ))}
