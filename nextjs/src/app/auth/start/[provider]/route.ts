@@ -23,12 +23,8 @@ export async function GET(
 
   // 1) cookie 保存（短命・HttpOnly）
   const res = NextResponse.redirect(
-    // 2) ここはあなたの認証開始URLに合わせる
-    // 例: better-auth が /api/auth/signin/:provider を持つならそこへ
-    new URL(
-      `${process.env.API_URL_EXTERNAL}/auth/start/${provider}`,
-      req.nextUrl.origin,
-    ),
+    // 2) Next.jsのプロキシ経由でbetter-authにアクセス
+    new URL(`/api/auth/sign-in/${provider}`, req.nextUrl.origin),
   );
 
   res.cookies.set({

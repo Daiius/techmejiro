@@ -4,9 +4,9 @@ import { db } from "db";
 
 export const auth = betterAuth({
   appName: "techmejiro",
-  baseURL: "http://localhost:4000",
+  baseURL: process.env.BASE_URL || "http://localhost:3000",
   database: drizzleAdapter(db, { provider: "mysql" }),
-  trustedOrigins: ["http://localhost:3000"],
+  trustedOrigins: [process.env.TRUSTED_ORIGIN || "http://localhost:3000"],
   // Better Auth はデフォルトで "better-auth.session_token" を使用
   // cookies: {
   //   session: {
