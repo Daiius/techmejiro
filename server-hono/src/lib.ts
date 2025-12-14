@@ -1,6 +1,6 @@
 import { db } from "db";
 import { votes } from "db/schema";
-import { sql } from "drizzle-orm";
+import { sql, eq, and, inArray } from "drizzle-orm";
 
 const techKeyToId: { [techKey: string]: number } = Object.fromEntries(
   (
@@ -47,21 +47,38 @@ export const updateVotesByUserId = async (
   userId: string,
   newVotes: { [techKey: string]: string },
 ) => {
-  console.log("updateVotesByUserId: ", userId, newVotes);
-  await db
-    .insert(votes)
-    .values(
-      Object.entries(newVotes).map(([techKey, impressionKey]) => ({
-        userId,
-        techId: techKeyToId[techKey],
-        impressionId: impressionKeyToId[impressionKey],
-      })),
-    )
-    .onDuplicateKeyUpdate({
-      set: {
-        impressionId: sql`values(${votes.impressionId})`,
-      },
-    });
+  const filtered = Object.fromEntries(
+    Object.entries(newVotes).filter(
+      ([_, impressionKey]) => impressionKey in impressionKeyToId,
+    ),
+  );
+  if (Object.keys(filtered).length > 0) {
+    await db
+      .insert(votes)
+      .values(
+        Object.entries(filtered).map(([techKey, impressionKey]) => ({
+          userId,
+          techId: techKeyToId[techKey],
+          impressionId: impressionKeyToId[impressionKey],
+        })),
+      )
+      .onDuplicateKeyUpdate({
+        set: {
+          impressionId: sql`values(${votes.impressionId})`,
+        },
+      });
+  }
 
-  console.log("db check: ", await db.query.votes.findMany());
+  const toDelete = Object.keys(newVotes).filter(
+    (k) => !(k in impressionKeyToId),
+  );
+  await db.delete(votes).where(
+    and(
+      eq(votes.userId, userId),
+      inArray(
+        votes.techId,
+        toDelete.map((key) => techKeyToId[key]),
+      ),
+    ),
+  );
 };
