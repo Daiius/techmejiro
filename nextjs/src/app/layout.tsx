@@ -30,7 +30,7 @@ export default function RootLayout({
         className={clsx(
           geistSans.className,
           geistMono.className,
-          "antialiased min-h-dvh flex flex-col scheme-light",
+          "antialiased min-h-dvh flex flex-col",
         )}
       >
         <Header />
