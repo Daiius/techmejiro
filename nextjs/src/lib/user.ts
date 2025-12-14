@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { honoClient } from "@/lib/honoClient";
+import { honoClientForServer as honoClient } from "@/lib/honoClient";
 
 export const getUser = async () => {
   const cookieHeader = await cookies();

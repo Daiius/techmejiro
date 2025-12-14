@@ -2,8 +2,15 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { auth } from "./better-auth.config";
-import { getImpressions, getTechs, getVotesByUserId } from "./lib";
+import {
+  getImpressions,
+  getTechs,
+  getVotesByUserId,
+  updateVotesByUserId,
+} from "./lib";
 import { loginRequired } from "./middlewares";
+import { zValidator as zv } from "@hono/zod-validator";
+import { z } from "zod/v4";
 
 export const app = new Hono();
 
@@ -48,6 +55,18 @@ const route = app
     const user = c.get("user");
     const votes = await getVotesByUserId(user.id);
     return c.json(votes);
-  });
+  })
+  .patch(
+    "/votes",
+    loginRequired,
+    zv("json", z.record(z.string(), z.string())),
+    async (c) => {
+      const user = c.get("user");
+      const votes = c.req.valid("json");
+      await updateVotesByUserId(user.id, votes);
+
+      return c.body(null, 200);
+    },
+  );
 
 export type AppType = typeof route;

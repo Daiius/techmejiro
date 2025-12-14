@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 /**
  * 例:
- * - セッションcookie名: better-auth.session_token
+ * - セッションcookie名: techmejiro.session_token
  * - post-signin redirect cookie名:
  *   - 本番: __Host-post-signin-redirect
  *   - 開発: post-signin-redirect
@@ -13,10 +13,10 @@ import { NextResponse } from "next/server";
  *   - Path は "/" 必須
  */
 const SESSION_COOKIE_NAMES = [
-  "better-auth.session_token",
+  "techmejiro.session_token",
   // もし refresh / csrf / state 等が別cookieならここに追加
-  // "better-auth.refresh",
-  // "better-auth.csrf",
+  // "techmejiro.refresh",
+  // "techmejiro.csrf",
 ];
 
 // 開発環境では __Host- プレフィックスは使えない（secure: true が必須のため）

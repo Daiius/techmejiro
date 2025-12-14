@@ -1,4 +1,4 @@
-import { honoClient } from "@/lib/honoClient";
+import { honoClientForServer as honoClient } from "@/lib/honoClient";
 
 export const getImpressions = async () => {
   const res = await honoClient.impressions.$get();

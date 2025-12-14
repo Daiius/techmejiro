@@ -1,4 +1,4 @@
-import { honoClient } from "@/lib/honoClient";
+import { honoClientForServer as honoClient } from "@/lib/honoClient";
 
 export const getTechs = async () => {
   const res = await honoClient.techs.$get();

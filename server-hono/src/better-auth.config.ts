@@ -26,12 +26,13 @@ export const auth = betterAuth({
       redirectTo: "http://localhost:3000/auth/after-signin",
     },
   },
-  //advanced: {
-  //  crossSubDomainCookies: {
-  //    enabled: true,
-  //    domain: ".localhost",
-  //  },
-  //},
+  advanced: {
+    cookiePrefix: "techmejiro",
+    //  crossSubDomainCookies: {
+    //    enabled: true,
+    //    domain: ".localhost",
+    //  },
+  },
   logger: {
     level: "debug",
     disabled: false,
