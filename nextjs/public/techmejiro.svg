@@ -27,13 +27,13 @@
      showgrid="true"
      showguides="false"
      inkscape:lockguides="false"
-     inkscape:zoom="2.8403108"
-     inkscape:cx="13.554854"
-     inkscape:cy="65.661827"
+     inkscape:zoom="7.4345804"
+     inkscape:cx="62.74732"
+     inkscape:cy="45.799491"
      inkscape:window-width="1256"
      inkscape:window-height="828"
-     inkscape:window-x="603"
-     inkscape:window-y="1488"
+     inkscape:window-x="8"
+     inkscape:window-y="48"
      inkscape:window-maximized="0"
      inkscape:current-layer="layer1">
     <inkscape:grid
@@ -139,5 +139,29 @@
        id="path1-5"
        inkscape:label="wing-edge"
        sodipodi:nodetypes="csc" />
+    <circle
+       style="fill:#fdfffe;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+       id="path18"
+       cx="40"
+       cy="30"
+       r="1" />
+    <circle
+       style="fill:#fdfffe;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+       id="path19"
+       cx="41.5"
+       cy="31.5"
+       r="0.5" />
+    <circle
+       style="fill:#fdfffe;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+       id="circle19"
+       cx="64"
+       cy="30"
+       r="1" />
+    <circle
+       style="fill:#fdfffe;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+       id="circle20"
+       cx="65.5"
+       cy="31.5"
+       r="0.5" />
   </g>
 </svg>

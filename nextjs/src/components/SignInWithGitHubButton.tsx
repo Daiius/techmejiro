@@ -25,7 +25,7 @@ export const SignInWithGitHubButton = () => {
           try {
             await authClient.signIn.social({
               provider: "github",
-              callbackURL: "http://localhost:3000/",
+              callbackURL: "http://localhost:3000/auth/after-signin",
             });
             setLastLoginMethod("github");
           } catch (error) {

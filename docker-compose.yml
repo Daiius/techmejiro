@@ -1,11 +1,12 @@
 services:
-  techmejiro-nextjs:
+  nextjs:
     build:
       dockerfile: ./nextjs/Dockerfile.nextjs
     container_name: techmejiro-nextjs-dev
     working_dir: /workspace/nextjs
     environment:
       TZ: "Asia/Tokyo"
+      PNPM_STORE_PATH: /pnpm-store
     env_file:
       - .env.nextjs
     ports:
@@ -14,10 +15,14 @@ services:
       - ./db:/workspace/db
       - ./nextjs:/workspace/nextjs
       - ./server-hono:/workspace/server-hono
+      - pnpm-store:/pnpm-store
     tmpfs:
       - /workspace/app/.next
+    depends_on:
+      db-seeder:
+        condition: service_completed_successfully
 
-  techmejiro-server-hono:
+  server:
     build:
       dockerfile: ./server-hono/Dockerfile.server-hono
     container_name: techmejiro-server-hono
@@ -27,17 +32,19 @@ services:
       - .env.db
     environment:
       TZ: "Asia/Tokyo"
+      PNPM_STORE_PATH: /pnpm-store
     ports:
       - 4000:4000
     volumes:
       - ./db:/workspace/db
       # - /workspace/db/node_modules
       - ./server-hono:/workspace/server-hono
+      - pnpm-store:/pnpm-store
       # - /workspace/webrtc/node_modules
       # - /workspace/node_modules
-    # depends_on:
-    #   db-seeder:
-    #     condition: service_completed_successfully
+    depends_on:
+      db-seeder:
+        condition: service_completed_successfully
 
   db:
     image: mysql:8.4
@@ -63,10 +70,13 @@ services:
       dockerfile: db/Dockerfile.db-seeder
     container_name: techmejiro-db-seeder
     working_dir: /workspace/db
+    environment:
+      PNPM_STORE_PATH: /pnpm-store
     env_file:
       - .env.db
     volumes:
       - ./db:/workspace/db
+      - pnpm-store:/pnpm-store
       # - /workspace/db/node_modules
       # - /workspace/node_modules
     command: >
@@ -83,6 +93,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
+volumes:
+  pnpm-store:
 
 networks:
   default:

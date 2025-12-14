@@ -11,7 +11,11 @@
   "exports": {
     ".": {
       "import": [
-        "./db/index.ts",
+        "./db/index.ts"
+      ]
+    },
+    "./schema": {
+      "import": [
         "./db/schema.ts"
       ]
     }

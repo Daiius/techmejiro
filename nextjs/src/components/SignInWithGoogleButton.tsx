@@ -21,7 +21,7 @@ export const SignInWithGoogleButton = () => {
           try {
             await authClient.signIn.social({
               provider: "google",
-              callbackURL: "http://localhost:3000",
+              callbackURL: "http://localhost:3000/auth/after-signin",
             });
             setLastLoginMethod("google");
           } catch (error) {

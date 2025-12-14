@@ -2,6 +2,7 @@ import { clsx } from "clsx";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Header } from "@/components/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,10 +30,11 @@ export default function RootLayout({
         className={clsx(
           geistSans.className,
           geistMono.className,
-          "antialiased",
+          "antialiased min-h-dvh flex flex-col scheme-light",
         )}
       >
-        {children}
+        <Header />
+        <main className="flex-1">{children}</main>
       </body>
     </html>
   );
