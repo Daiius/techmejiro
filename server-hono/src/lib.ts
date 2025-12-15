@@ -69,9 +69,9 @@ export const updateVotesByUserId = async (
       });
   }
 
-  const toDelete = Object.keys(newVotes).filter(
-    (k) => !(k in impressionKeyToId),
-  );
+  const toDelete = Object.entries(newVotes).filter(
+    ([_, impression]) => !(impression in impressionKeyToId),
+  ).map(([techKey, _]) => techKey);
   await db.delete(votes).where(
     and(
       eq(votes.userId, userId),
