@@ -3,7 +3,7 @@ import { getVotes } from "@/lib/votes";
 import { getImpressions } from "@/lib/impressions";
 
 import { VotesFormClient } from "@/components/VotesFormClient";
-import {redirect} from "next/navigation";
+import {redirect, RedirectType} from "next/navigation";
 
 export const VotesForm = async () => {
   const techsResult = await getTechs();
@@ -30,7 +30,7 @@ export const VotesForm = async () => {
     if (votesResult.error.type === "Unauthorized") {
       const prepareUrl = new URL("/auth/prepare", process.env.HOST_URL);
       prepareUrl.searchParams.set("next", "/votes");
-      return redirect(prepareUrl.toString());
+      return redirect(prepareUrl.toString(), RedirectType.push);
     }
     return (
       <div className="alert alert-error">
