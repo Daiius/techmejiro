@@ -1,10 +1,16 @@
-import type { getTechs } from "@/lib/techs";
-import type { getVotes } from "@/lib/votes";
-import type { getImpressions } from "@/lib/impressions";
+import type { InferResponseType } from "hono/client";
+import { honoClientForServer as honoClient } from "./lib/honoClient";
 
 export type ElementType<T> = T extends (infer U)[] ? U : never;
-export type Vote = ElementType<Awaited<ReturnType<typeof getVotes>>>;
-export type Impression = ElementType<
-  Awaited<ReturnType<typeof getImpressions>>
->;
-export type Tech = ElementType<Awaited<ReturnType<typeof getTechs>>>;
+
+export type Result<T, E> = 
+  | { success: true, data: T }
+  | { success: false, error: E }
+
+export type Vote = ElementType<InferResponseType<typeof honoClient.votes.$get>>
+export type Impression = ElementType<InferResponseType<typeof honoClient.impressions.$get>>
+export type Tech = ElementType<InferResponseType<typeof honoClient.techs.$get>>;
+
+export type Error =
+  | { type: "Unauthorized", message: string }
+  | { type: "Unexpected", message: string }

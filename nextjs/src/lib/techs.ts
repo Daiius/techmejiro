@@ -1,6 +1,8 @@
+
+import type { Result, Tech } from "@/types";
 import { honoClientForServer as honoClient } from "@/lib/honoClient";
 
-export const getTechs = async () => {
+export const getTechs = async (): Promise<Result<Tech[], Error>> => {
   const res = await honoClient.techs.$get();
   if (!res.ok) {
     return [];
