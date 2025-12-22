@@ -31,3 +31,13 @@
   - 最近話題の認証ライブラリ、使い心地を試してみたいです
   - 食わず嫌いしている DB セッション管理をちゃんと使ってみたいです
   - DB + Hono をセルフホストする構成なので Hono 側に入ります
+
+### 画面遷移
+```mermaid
+flowchart
+    home[Home] --"vote" button--> vote[Vote*]
+    home --"analysis" button--> analysis[Analysis*] 
+```
+
+- Vote 画面はログイン必須で、失敗した場合は Home に戻る
+- Analysis 画面はログインがオプションで、ログインしている場合はユーザ毎の分析が出る
