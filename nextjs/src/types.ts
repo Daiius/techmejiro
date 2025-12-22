@@ -12,5 +12,8 @@ export type Impression = ElementType<InferResponseType<typeof honoClient.impress
 export type Tech = ElementType<InferResponseType<typeof honoClient.techs.$get>>;
 
 export type Error =
+  | { type: "NetworkError", message: string, status: number }
   | { type: "Unauthorized", message: string }
+  | { type: "NotFound", message: string }
+  | { type: "ParseError", message: string }
   | { type: "Unexpected", message: string }
