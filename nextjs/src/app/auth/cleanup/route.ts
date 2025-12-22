@@ -26,13 +26,26 @@ const POST_LOGIN_REDIRECT_COOKIE =
     : "post-signin-redirect";
 
 
-export function GET(req: Request) {
+export async function GET(req: Request) {
   const url = new URL(req.url);
+
+  // 1) better-auth のサインアウトAPIを呼び出してサーバー側のセッションを削除
+  try {
+    await fetch(new URL("/api/auth/sign-out", url.origin), {
+      method: "POST",
+      headers: {
+        cookie: req.headers.get("cookie") || "",
+      },
+    });
+  } catch (error) {
+    console.error("[CLEANUP] Failed to call sign-out API:", error);
+    // エラーでも続行（クッキー削除は行う）
+  }
 
   // signin へ redirect（origin は同一サイトに固定される）
   const res = NextResponse.redirect(new URL("/", url.origin));
 
-  // 1) セッションcookieを削除（発行時と同じ属性で expire するのが重要）
+  // 2) セッションcookieを削除（発行時と同じ属性で expire するのが重要）
   //    ※ Domain を付けて発行しているなら、ここでも domain を付けて消す必要があります。
   for (const name of SESSION_COOKIE_NAMES) {
     res.cookies.set({
@@ -47,7 +60,7 @@ export function GET(req: Request) {
     });
   }
 
-  // 2) ログイン後の戻り先を HttpOnly cookie に保存（短命・使い捨て想定）
+  // 3) ログイン後の戻り先を HttpOnly cookie に保存（短命・使い捨て想定）
   res.cookies.set({
     name: POST_LOGIN_REDIRECT_COOKIE,
     value: "/",
