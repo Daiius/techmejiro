@@ -1,5 +1,5 @@
 services:
-  techmejiro-nextjs:
+  nextjs:
     command: pnpm prodcheck
     depends_on:
       db-seeder:
