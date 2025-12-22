@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { honoClientForClient as honoClient } from "@/lib/honoClient";
+import { updateVotes } from "@/lib/votes";
 
 import type { Vote } from "@/types";
 
@@ -22,9 +22,14 @@ export const useVotesForm = ({ initialVotes }: UseVotesFormArgs) => {
   const [completedVotes, setCompletedVotes] = useState<string[]>([]);
   const debouncedSubmitUpdatedVotes = useDebouncedCallback(
     async (votesToSubmit: { [techKey: string]: string }) => {
-      await honoClient.votes.$patch({ json: votesToSubmit });
-      setUpdatedVotes({});
-      setCompletedVotes([...completedVotes, ...Object.keys(votesToSubmit)]);
+      const result = await updateVotes(votesToSubmit);
+      if (result.success) {
+        setUpdatedVotes({});
+        setCompletedVotes([...completedVotes, ...Object.keys(votesToSubmit)]);
+      } else {
+        console.error("Failed to update votes:", result.error);
+        // エラー処理: ユーザーに通知するなど
+      }
     },
     3_000, // 3 seconds
   );

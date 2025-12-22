@@ -19,5 +19,5 @@ export default async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/user/:path*"],
+  matcher: ["/votes"],
 };

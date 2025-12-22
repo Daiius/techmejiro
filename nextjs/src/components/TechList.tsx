@@ -2,9 +2,19 @@ import { getTechs } from "@/lib/techs";
 
 export const TechList = async () => {
   "use cache";
-  const techs = await getTechs();
+  const techsResult = await getTechs();
 
-  return techs != null ? (
+  if (!techsResult.success) {
+    return (
+      <div className="alert alert-error">
+        <span>技術データの取得に失敗しました: {techsResult.error.message}</span>
+      </div>
+    );
+  }
+
+  const techs = techsResult.data;
+
+  return techs.length > 0 ? (
     <ul className="list">
       {techs.map((tech) => (
         <li key={tech.key} className="list-row">

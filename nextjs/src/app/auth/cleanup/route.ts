@@ -24,37 +24,28 @@ const POST_LOGIN_REDIRECT_COOKIE =
   process.env.NODE_ENV === "production"
     ? "__Host-post-signin-redirect"
     : "post-signin-redirect";
-const LOGIN_PATH = "/signin";
 
-/** 内部遷移として安全な next に丸める */
-function sanitizeNext(raw: string | null): string {
-  if (!raw) return "/";
 
-  const v = raw.trim().replace(/[\u0000-\u001F\u007F]/g, "");
-
-  // スキーム付き（http:, javascript: など）を拒否
-  if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(v)) return "/";
-  // ネットワークパス参照 //evil.com を拒否
-  if (v.startsWith("//")) return "/";
-  // バックスラッシュは解釈ブレの元なので拒否
-  if (v.includes("\\")) return "/";
-  // 相対パスは "/..." のみ許可
-  if (!v.startsWith("/")) return "/";
-
-  // ループ防止（必要に応じて追加/調整）
-  if (v.startsWith(LOGIN_PATH) || v.startsWith("/auth/cleanup")) return "/";
-
-  return v;
-}
-
-export function GET(req: Request) {
+export async function GET(req: Request) {
   const url = new URL(req.url);
-  const next = sanitizeNext(url.searchParams.get("next"));
+
+  // 1) better-auth のサインアウトAPIを呼び出してサーバー側のセッションを削除
+  try {
+    await fetch(new URL("/api/auth/sign-out", url.origin), {
+      method: "POST",
+      headers: {
+        cookie: req.headers.get("cookie") || "",
+      },
+    });
+  } catch (error) {
+    console.error("[CLEANUP] Failed to call sign-out API:", error);
+    // エラーでも続行（クッキー削除は行う）
+  }
 
   // signin へ redirect（origin は同一サイトに固定される）
-  const res = NextResponse.redirect(new URL(LOGIN_PATH, url.origin));
+  const res = NextResponse.redirect(new URL("/", url.origin));
 
-  // 1) セッションcookieを削除（発行時と同じ属性で expire するのが重要）
+  // 2) セッションcookieを削除（発行時と同じ属性で expire するのが重要）
   //    ※ Domain を付けて発行しているなら、ここでも domain を付けて消す必要があります。
   for (const name of SESSION_COOKIE_NAMES) {
     res.cookies.set({
@@ -69,10 +60,10 @@ export function GET(req: Request) {
     });
   }
 
-  // 2) ログイン後の戻り先を HttpOnly cookie に保存（短命・使い捨て想定）
+  // 3) ログイン後の戻り先を HttpOnly cookie に保存（短命・使い捨て想定）
   res.cookies.set({
     name: POST_LOGIN_REDIRECT_COOKIE,
-    value: next,
+    value: "/",
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
