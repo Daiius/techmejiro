@@ -12,7 +12,7 @@ export const getVotes = async (): Promise<Result<Vote[], Error>> => {
       cookie: cookieHeader.toString(),
     },
   });
-  return fromHonoResponse<Vote[]>(res);
+  return fromHonoResponse(res);
 };
 
 export const updateVotes = async (newVotes: Record<string, string>): Promise<Result<void, Error>> => {
@@ -26,22 +26,5 @@ export const updateVotes = async (newVotes: Record<string, string>): Promise<Res
     },
   );
 
-  if (!res.ok) {
-    if (res.status === 401 || res.status === 403) {
-      return {
-        success: false,
-        error: { type: "Unauthorized", message: "認証が必要です" }
-      };
-    }
-    return {
-      success: false,
-      error: {
-        type: "NetworkError",
-        message: `Request failed: ${res.statusText}`,
-        status: res.status
-      }
-    };
-  }
-
-  return { success: true, data: undefined };
+  return fromHonoResponse<void>(res);
 };

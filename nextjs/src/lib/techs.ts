@@ -4,5 +4,5 @@ import { fromHonoResponse } from "@/lib/result";
 
 export const getTechs = async (): Promise<Result<Tech[], Error>> => {
   const res = await honoClient.techs.$get();
-  return fromHonoResponse<Tech[]>(res);
+  return fromHonoResponse(res);
 };

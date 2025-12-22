@@ -6,10 +6,10 @@ import { getUser } from "@/lib/user";
 
 export const SignInSection = async () => {
   "use cache: private";
-  const user = await getUser();
-  return user != null ? (
+  const userResult = await getUser();
+  return userResult.success ? (
     <div className="flex flex-col items-start">
-      <span>Hello, {user.name}!!</span>
+      <span>Hello, {userResult.data.name}!!</span>
       <SignOutButton />
     </div>
   ) : (

@@ -33,7 +33,7 @@ const route = app
   })
   .get("/me", loginRequired, async (c) => {
     const { id, name, email } = c.get("user");
-    return c.json({ user: { id, name, email } });
+    return c.json({ id, name, email });
   })
   .get("/techs", async (c) => {
     const techs = await getTechs();

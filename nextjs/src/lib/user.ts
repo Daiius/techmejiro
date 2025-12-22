@@ -1,18 +1,15 @@
 import { cookies } from "next/headers";
+import type { Result, User, Error } from "@/types";
 import { honoClientForServer as honoClient } from "@/lib/honoClient";
+import { fromHonoResponse } from "@/lib/result";
 
-export const getUser = async () => {
+export const getUser = async (): Promise<Result<User, Error>> => {
   const cookieHeader = await cookies();
   const res = await honoClient.me.$get(undefined, {
     headers: {
       cookie: cookieHeader.toString(),
     },
   });
-  if (!res.ok) {
-    // TODO use unique session token name
-    return null;
-  }
-  const { user } = await res.json();
 
-  return user;
+  return fromHonoResponse(res);
 };
