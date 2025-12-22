@@ -3,6 +3,7 @@ import { getVotes } from "@/lib/votes";
 import { getImpressions } from "@/lib/impressions";
 
 import { VotesFormClient } from "@/components/VotesFormClient";
+import {redirect} from "next/navigation";
 
 export const VotesForm = async () => {
   const techsResult = await getTechs();
@@ -26,6 +27,11 @@ export const VotesForm = async () => {
   }
 
   if (!votesResult.success) {
+    if (votesResult.error.type === "Unauthorized") {
+      const prepareUrl = new URL("/auth/prepare", process.env.HOST_URL);
+      prepareUrl.searchParams.set("next", "/votes");
+      return redirect(prepareUrl.toString());
+    }
     return (
       <div className="alert alert-error">
         <span>投票データの取得に失敗しました: {votesResult.error.message}</span>

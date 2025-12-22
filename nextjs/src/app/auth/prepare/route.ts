@@ -6,6 +6,9 @@ const POST_LOGIN_REDIRECT_COOKIE =
     ? "__Host-post-signin-redirect"
     : "post-signin-redirect";
 
+// このWebアプリケーションで許可されるログイン後のリダイレクト先
+const allowedRedirectTargets = ["/votes", "/analysis"] as const;
+
 function sanitizeNext(raw: string | null): string {
   if (!raw) return "/";
   const v = raw.trim().replace(/[\u0000-\u001F\u007F]/g, "");
@@ -17,7 +20,7 @@ function sanitizeNext(raw: string | null): string {
   if (v.startsWith("/signin") || v.startsWith("/auth/")) return "/";
 
   // リダイレクト候補は限定される（/user 以下）のでそれ以外を指定されたら / にしておく
-  if (!v.startsWith("/user")) return "/";
+  if (!(v in allowedRedirectTargets)) return "/";
 
   return v;
 }
