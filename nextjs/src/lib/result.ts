@@ -1,11 +1,13 @@
-import type { Result, Error } from "@/types";
+import type { Result, AppError } from "@/types";
+import type { ClientResponse } from "hono/client";
 
 /**
- * Hono RPCのResponseをResult型に変換するヘルパー関数
+ * Hono RPCのClientResponseをResult型に変換するヘルパー関数
+ * ClientResponseの型パラメータから正しい型を推論します
  */
 export async function fromHonoResponse<T>(
-  response: Response
-): Promise<Result<T, Error>> {
+  response: ClientResponse<T>
+): Promise<Result<T, AppError>> {
   if (!response.ok) {
     if (response.status === 401 || response.status === 403) {
       return {
@@ -30,7 +32,7 @@ export async function fromHonoResponse<T>(
   }
 
   try {
-    const data = await response.json();
+    const data = await response.json() as T;
     return { success: true, data };
   } catch (e) {
     return {

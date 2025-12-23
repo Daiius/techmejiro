@@ -7,6 +7,7 @@ import {
   getTechs,
   getVotesByUserId,
   updateVotesByUserId,
+  getAnalysisByTechKey,
 } from "./lib";
 import { loginRequired } from "./middlewares";
 import { zValidator as zv } from "@hono/zod-validator";
@@ -67,6 +68,12 @@ const route = app
 
       return c.body(null, 200);
     },
-  );
+  )
+  .get("/analysis/single/:techKey", async (c) => {
+    const techKey = c.req.param("techKey");
+    const analysis = await getAnalysisByTechKey(techKey);
+
+    return c.json(analysis, 200);
+  });
 
 export type AppType = typeof route;
