@@ -2,8 +2,7 @@ import { Suspense } from "react";
 import { getTechs } from "@/lib/techs";
 import { redirect } from "next/navigation";
 import type { Tech, Result, AppError } from "@/types";
-import {getAnalysisByTechKey} from "../../../../../server-hono/src/lib";
-import {getAnalysisBySingleTech} from "@/lib/analysis";
+import { getAnalysisBySingleTech } from "@/lib/analysis";
 
 const getTechsOrRedirect = async (techsParam: string): Promise<Result<Tech[], AppError>> => {
   const decodedTechs = decodeURIComponent(techsParam);
@@ -52,9 +51,22 @@ const AnalysisPageContent = async ({ params }: {
 
   const tech = selectedTechs.data[0];
   const analysis = await getAnalysisBySingleTech(tech.key);
+  if (!analysis.success) {
+    return <div><p>分析データの取得に失敗しました</p></div>
+  }
 
   return (
-    <h2>{selectedTechs.data.map(tech => tech.name).join(", ")}</h2>
+    <div>
+      <h2>{selectedTechs.data.map(tech => tech.name).join(", ")}</h2>
+      <div>
+        {analysis.data.map((data, idata) =>
+          <div key={idata} className="flex">
+            <span>{data.techName}: </span>
+            <span>{data.userCount}</span>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 

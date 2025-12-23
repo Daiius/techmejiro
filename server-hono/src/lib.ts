@@ -1,6 +1,6 @@
 import { db } from "db";
 import { votes, techs } from "db/schema";
-import { sql, eq, and, inArray, not } from "drizzle-orm";
+import { sql, eq, and, inArray, not, desc } from "drizzle-orm";
 
 const techKeyToId: { [techKey: string]: number } = Object.fromEntries(
   (
@@ -106,20 +106,22 @@ export const getAnalysisByTechKey = async (techKey: string) => {
     .select({
       techKey: techs.key,
       techName: techs.name,
-      userCount: sql<number>`count(distinct ${votes.userId}`.as('user_count'),
+      userCount: sql<number>`count(distinct ${votes.userId})`.as('user_count'),
     })
     .from(votes)
     .innerJoin(techs, eq(votes.techId, techs.id))
     .where(
       and(
         sql`${votes.userId} IN (
-          SELECT user_id FROM Votes WHRER tech_id = ${techKeyToId[techKey]}
+          SELECT user_id FROM Votes WHERE tech_id = ${techKeyToId[techKey]}
         )`,
         not(eq(votes.techId, techKeyToId[techKey])),
       ),
     )
-    .groupBy(votes.techId, techs.key, techs.name);
+    .groupBy(votes.techId, techs.key, techs.name)
+    .orderBy(desc(sql`user_count`));
 
+  console.log(`relatedVotes to ${techKey}:`, relatedVotes);
 
   return relatedVotes;
 }

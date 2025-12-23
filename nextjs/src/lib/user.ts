@@ -10,6 +10,5 @@ export const getUser = async (): Promise<Result<User, AppError>> => {
       cookie: cookieHeader.toString(),
     },
   });
-
   return fromHonoResponse(res);
 };

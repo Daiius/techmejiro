@@ -15,7 +15,7 @@ export const getVotes = async (): Promise<Result<Vote[], AppError>> => {
   return fromHonoResponse(res);
 };
 
-export const updateVotes = async (newVotes: Record<string, string>): Promise<Result<void, AppError>> => {
+export const updateVotes = async (newVotes: Record<string, string>): Promise<Result<null, AppError>> => {
   const cookieHeader = await cookies();
   const res = await honoClient.votes.$patch(
     { json: newVotes },
@@ -25,6 +25,5 @@ export const updateVotes = async (newVotes: Record<string, string>): Promise<Res
       },
     },
   );
-
-  return fromHonoResponse<void>(res);
+  return fromHonoResponse(res);
 };
