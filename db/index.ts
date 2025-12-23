@@ -1,5 +1,8 @@
-import { db } from "db";
-import { votes, techs } from "db/schema";
+import { db } from "./db";
+import {
+  votes,
+  techs,
+} from "./db/schema";
 import { sql, eq, and, inArray, not, desc } from "drizzle-orm";
 
 const techKeyToId: { [techKey: string]: number } = Object.fromEntries(

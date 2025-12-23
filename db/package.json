@@ -11,13 +11,11 @@
   "exports": {
     ".": {
       "import": [
-        "./db/index.ts"
+        "./index.ts"
       ]
     },
-    "./schema": {
-      "import": [
-        "./db/schema.ts"
-      ]
+    "./client": {
+      "import": [ "./db/index.ts" ]
     }
   },
   "keywords": [],

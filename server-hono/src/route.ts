@@ -8,7 +8,7 @@ import {
   getVotesByUserId,
   updateVotesByUserId,
   getAnalysisByTechKey,
-} from "./lib";
+} from "db";
 import { loginRequired } from "./middlewares";
 import { zValidator as zv } from "@hono/zod-validator";
 import { z } from "zod/v4";
