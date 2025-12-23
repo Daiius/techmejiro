@@ -79,6 +79,16 @@ const impressionMap = new Map(
 );
 
 // テストユーザーと投票データを挿入
+// デフォルトでは1000ユーザー、シード値42でランダムデータを生成
+// カスタマイズ例:
+// await addVoteData(db, techMap, impressionMap, {
+//   userCount: 500,
+//   seed: 12345,
+//   config: {
+//     techPopularity: { react: 0.8, nextjs: 0.6, ... },
+//     impressionWeights: { familiar: 3, "often-use": 2, favorite: 1 }
+//   }
+// });
 await addVoteData(db, techMap, impressionMap);
 
 await client.end();
