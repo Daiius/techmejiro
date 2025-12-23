@@ -36,11 +36,8 @@ services:
       - 4000:4000
     volumes:
       - ./db:/workspace/db
-      # - /workspace/db/node_modules
       - ./server-hono:/workspace/server-hono
       - pnpm-store:/pnpm-store
-      # - /workspace/webrtc/node_modules
-      # - /workspace/node_modules
     depends_on:
       db-seeder:
         condition: service_completed_successfully
@@ -74,8 +71,6 @@ services:
     volumes:
       - ./db:/workspace/db
       - pnpm-store:/pnpm-store
-      # - /workspace/db/node_modules
-      # - /workspace/node_modules
     command: >
       bash -c '
         pnpm install && \
