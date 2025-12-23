@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { getTechs } from "@/lib/techs";
 import { redirect } from "next/navigation";
 import type { Tech, Result, AppError } from "@/types";
+import {getAnalysisByTechKey} from "../../../../../server-hono/src/lib";
+import {getAnalysisBySingleTech} from "@/lib/analysis";
 
 const getTechsOrRedirect = async (techsParam: string): Promise<Result<Tech[], AppError>> => {
   const decodedTechs = decodeURIComponent(techsParam);
@@ -47,6 +49,9 @@ const AnalysisPageContent = async ({ params }: {
   if (!selectedTechs.success) {
     return <div><p>技術一覧データの取得に失敗しました</p></div>;
   }
+
+  const tech = selectedTechs.data[0];
+  const analysis = await getAnalysisBySingleTech(tech.key);
 
   return (
     <h2>{selectedTechs.data.map(tech => tech.name).join(", ")}</h2>

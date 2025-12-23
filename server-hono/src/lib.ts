@@ -1,6 +1,6 @@
 import { db } from "db";
-import { votes } from "db/schema";
-import { sql, eq, and, inArray } from "drizzle-orm";
+import { votes, techs } from "db/schema";
+import { sql, eq, and, inArray, not } from "drizzle-orm";
 
 const techKeyToId: { [techKey: string]: number } = Object.fromEntries(
   (
@@ -82,3 +82,44 @@ export const updateVotesByUserId = async (
     ),
   );
 };
+
+export const getAnalysisByTechKey = async (techKey: string) => {
+  // cannot use groupBy...
+  //const relatedVotes = await db.query.votes.findMany({
+  //  where: {
+  //    AND: [
+  //      { RAW: 
+  //          sql`${votes.userId} in (
+  //            select user_id from Votes where tech_id = ${techKeyToId[techKey]}
+  //          )`,
+  //      },
+  //      { NOT: { techId: techKeyToId[techKey] } },
+  //    ],
+  //  },
+  //  with: {
+  //    tech: { columns: { name: true, key: true, } },
+  //    impression: { columns: { name: true, key: true, } },
+  //  },
+  //  columns: {},
+  //});
+  const relatedVotes = await db
+    .select({
+      techKey: techs.key,
+      techName: techs.name,
+      userCount: sql<number>`count(distinct ${votes.userId}`.as('user_count'),
+    })
+    .from(votes)
+    .innerJoin(techs, eq(votes.techId, techs.id))
+    .where(
+      and(
+        sql`${votes.userId} IN (
+          SELECT user_id FROM Votes WHRER tech_id = ${techKeyToId[techKey]}
+        )`,
+        not(eq(votes.techId, techKeyToId[techKey])),
+      ),
+    )
+    .groupBy(votes.techId, techs.key, techs.name);
+
+
+  return relatedVotes;
+}
