@@ -4,6 +4,9 @@ WORKDIR /workspace/nextjs
 
 RUN npm install -g pnpm
 
+# Configure pnpm to use shared store
+RUN echo "store-dir=/pnpm-store" > /workspace/.npmrc
+
 # monorepo root
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml /workspace/
 # monorepo db
@@ -13,7 +16,5 @@ COPY server-hono/package.json /workspace/server-hono/
 # monorepo nextjs
 COPY nextjs/package.json nextjs/tsconfig.json /workspace/nextjs/
 
-RUN pnpm install
-
-CMD ["pnpm", "dev"]
+CMD ["bash", "-c", "pnpm install && pnpm dev"]
 
