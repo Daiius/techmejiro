@@ -1,6 +1,12 @@
-import { db } from "db";
-import { votes, techs } from "db/schema";
+import { db } from "./db";
+import {
+  votes,
+  techs,
+} from "./db/schema";
 import { sql, eq, and, inArray, not, desc } from "drizzle-orm";
+import createDebug from "debug";
+
+const debug = createDebug("techmejiro:db:DEBUG")
 
 const techKeyToId: { [techKey: string]: number } = Object.fromEntries(
   (
@@ -84,24 +90,7 @@ export const updateVotesByUserId = async (
 };
 
 export const getAnalysisByTechKey = async (techKey: string) => {
-  // cannot use groupBy...
-  //const relatedVotes = await db.query.votes.findMany({
-  //  where: {
-  //    AND: [
-  //      { RAW: 
-  //          sql`${votes.userId} in (
-  //            select user_id from Votes where tech_id = ${techKeyToId[techKey]}
-  //          )`,
-  //      },
-  //      { NOT: { techId: techKeyToId[techKey] } },
-  //    ],
-  //  },
-  //  with: {
-  //    tech: { columns: { name: true, key: true, } },
-  //    impression: { columns: { name: true, key: true, } },
-  //  },
-  //  columns: {},
-  //});
+  debug('getAnalysisByTechKey started...');
   const relatedVotes = await db
     .select({
       techKey: techs.key,
@@ -121,7 +110,8 @@ export const getAnalysisByTechKey = async (techKey: string) => {
     .groupBy(votes.techId, techs.key, techs.name)
     .orderBy(desc(sql`user_count`));
 
-  console.log(`relatedVotes to ${techKey}:`, relatedVotes);
+  debug('getAnalysisByTechKey done.');
+  debug(`relatedVotes to ${techKey}:`, relatedVotes);
 
   return relatedVotes;
 }

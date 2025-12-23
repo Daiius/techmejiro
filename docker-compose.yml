@@ -6,7 +6,6 @@ services:
     working_dir: /workspace/nextjs
     environment:
       TZ: "Asia/Tokyo"
-      PNPM_STORE_PATH: /pnpm-store
     env_file:
       - .env.nextjs
     ports:
@@ -32,16 +31,13 @@ services:
       - .env.db
     environment:
       TZ: "Asia/Tokyo"
-      PNPM_STORE_PATH: /pnpm-store
+      DEBUG: '*'
     ports:
       - 4000:4000
     volumes:
       - ./db:/workspace/db
-      # - /workspace/db/node_modules
       - ./server-hono:/workspace/server-hono
       - pnpm-store:/pnpm-store
-      # - /workspace/webrtc/node_modules
-      # - /workspace/node_modules
     depends_on:
       db-seeder:
         condition: service_completed_successfully
@@ -70,17 +66,14 @@ services:
       dockerfile: db/Dockerfile.db-seeder
     container_name: techmejiro-db-seeder
     working_dir: /workspace/db
-    environment:
-      PNPM_STORE_PATH: /pnpm-store
     env_file:
       - .env.db
     volumes:
       - ./db:/workspace/db
       - pnpm-store:/pnpm-store
-      # - /workspace/db/node_modules
-      # - /workspace/node_modules
     command: >
       bash -c '
+        pnpm install && \
         pnpm drizzle-kit push --force \
              --dialect mysql \
              --schema=./db/schema.ts \

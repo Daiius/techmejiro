@@ -2,112 +2,127 @@ import { votes, user } from "./db/schema";
 import type { MySql2Database } from "drizzle-orm/mysql2";
 import * as schema from "./db/schema";
 
+// シード付き乱数生成器 (Mulberry32)
+function mulberry32(seed: number) {
+  return function () {
+    let t = (seed += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+export interface TechVoteConfig {
+  // 技術keyごとの投票確率 (0-1)
+  techPopularity: Record<string, number>;
+  // インプレッションkeyごとの重み (合計で正規化される)
+  impressionWeights: Record<string, number>;
+}
+
+export interface VoteDataParams {
+  userCount: number;
+  seed: number;
+  config: TechVoteConfig;
+}
+
+// デフォルト設定
+const DEFAULT_CONFIG: TechVoteConfig = {
+  techPopularity: {
+    react: 0.7,
+    nextjs: 0.5,
+    "tanstack-start": 0.15,
+    vue: 0.4,
+    mysql: 0.45,
+    postgres: 0.55,
+    hono: 0.3,
+    express: 0.5,
+    "drizzle-orm": 0.25,
+    prisma: 0.4,
+    vercel: 0.4,
+    "aws-amplify": 0.2,
+  },
+  impressionWeights: {
+    familiar: 3,
+    "often-use": 2,
+    favorite: 1,
+  },
+};
+
 export async function addVoteData(
   db: MySql2Database<typeof schema>,
   techMap: Map<string, number>,
-  impressionMap: Map<string, number>
+  impressionMap: Map<string, number>,
+  params: Partial<VoteDataParams> = {}
 ) {
-  // テストユーザーを挿入
-  await db.insert(user).values([
-    {
-      id: "test-user-001",
-      name: "田中太郎",
-      email: "tanaka@example.com",
-      emailVerified: true,
-    },
-    {
-      id: "test-user-002",
-      name: "佐藤花子",
-      email: "sato@example.com",
-      emailVerified: true,
-    },
-    {
-      id: "test-user-003",
-      name: "鈴木一郎",
-      email: "suzuki@example.com",
-      emailVerified: true,
-    },
-  ]);
+  const {
+    userCount = 1000,
+    seed = 42,
+    config = DEFAULT_CONFIG,
+  } = params;
 
-  // テストユーザーによる投票データを挿入
-  // ユーザー1: フロントエンド寄りの技術スタック
-  // ユーザー2: フルスタック寄りの技術スタック
-  // ユーザー3: バックエンド寄りの技術スタック
-  await db.insert(votes).values([
-    // 田中太郎（フロントエンド開発者）
-    {
-      userId: "test-user-001",
-      techId: techMap.get("react")!,
-      impressionId: impressionMap.get("favorite")!,
-    },
-    {
-      userId: "test-user-001",
-      techId: techMap.get("nextjs")!,
-      impressionId: impressionMap.get("favorite")!,
-    },
-    {
-      userId: "test-user-001",
-      techId: techMap.get("vercel")!,
-      impressionId: impressionMap.get("often-use")!,
-    },
-    {
-      userId: "test-user-001",
-      techId: techMap.get("postgres")!,
-      impressionId: impressionMap.get("familiar")!,
-    },
+  const random = mulberry32(seed);
 
-    // 佐藤花子（フルスタック開発者）
-    {
-      userId: "test-user-002",
-      techId: techMap.get("react")!,
-      impressionId: impressionMap.get("often-use")!,
-    },
-    {
-      userId: "test-user-002",
-      techId: techMap.get("nextjs")!,
-      impressionId: impressionMap.get("often-use")!,
-    },
-    {
-      userId: "test-user-002",
-      techId: techMap.get("hono")!,
-      impressionId: impressionMap.get("favorite")!,
-    },
-    {
-      userId: "test-user-002",
-      techId: techMap.get("drizzle-orm")!,
-      impressionId: impressionMap.get("favorite")!,
-    },
-    {
-      userId: "test-user-002",
-      techId: techMap.get("postgres")!,
-      impressionId: impressionMap.get("often-use")!,
-    },
+  // インプレッション重みの正規化
+  const impressionKeys = Object.keys(config.impressionWeights);
+  const totalWeight = Object.values(config.impressionWeights).reduce(
+    (sum, w) => sum + w,
+    0
+  );
 
-    // 鈴木一郎（Vue寄りの開発者）
-    {
-      userId: "test-user-003",
-      techId: techMap.get("react")!,
-      impressionId: impressionMap.get("familiar")!,
-    },
-    {
-      userId: "test-user-003",
-      techId: techMap.get("vue")!,
-      impressionId: impressionMap.get("favorite")!,
-    },
-    {
-      userId: "test-user-003",
-      techId: techMap.get("express")!,
-      impressionId: impressionMap.get("often-use")!,
-    },
-    {
-      userId: "test-user-003",
-      techId: techMap.get("mysql")!,
-      impressionId: impressionMap.get("often-use")!,
-    },
-    {
-      userId: "test-user-003",
-      techId: techMap.get("prisma")!,
-      impressionId: impressionMap.get("familiar")!,
-    },
-  ]);
+  // ユーザー生成
+  const users = [];
+  for (let i = 0; i < userCount; i++) {
+    users.push({
+      id: `test-user-${String(i).padStart(6, "0")}`,
+      name: `テストユーザー${i + 1}`,
+      email: `test-user-${i}@example.com`,
+      emailVerified: true,
+    });
+  }
+
+  // バッチでユーザーを挿入（1000件一度に挿入するとクエリが大きくなるので分割）
+  const BATCH_SIZE = 100;
+  for (let i = 0; i < users.length; i += BATCH_SIZE) {
+    await db.insert(user).values(users.slice(i, i + BATCH_SIZE));
+  }
+
+  // 投票データ生成
+  const voteData = [];
+  for (const u of users) {
+    // 各技術について投票するかどうかを確率的に決定
+    for (const [techKey, techId] of techMap.entries()) {
+      const popularity = config.techPopularity[techKey] ?? 0.3;
+
+      if (random() < popularity) {
+        // インプレッションを重み付けランダムで選択
+        const r = random() * totalWeight;
+        let cumulative = 0;
+        let selectedImpression = impressionKeys[0];
+
+        for (const impKey of impressionKeys) {
+          cumulative += config.impressionWeights[impKey];
+          if (r < cumulative) {
+            selectedImpression = impKey;
+            break;
+          }
+        }
+
+        const impressionId = impressionMap.get(selectedImpression);
+        if (impressionId) {
+          voteData.push({
+            userId: u.id,
+            techId,
+            impressionId,
+          });
+        }
+      }
+    }
+  }
+
+  // バッチで投票データを挿入
+  for (let i = 0; i < voteData.length; i += BATCH_SIZE) {
+    await db.insert(votes).values(voteData.slice(i, i + BATCH_SIZE));
+  }
+
+  console.log(`Generated ${users.length} users and ${voteData.length} votes`);
 }

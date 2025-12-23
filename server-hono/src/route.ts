@@ -8,7 +8,7 @@ import {
   getVotesByUserId,
   updateVotesByUserId,
   getAnalysisByTechKey,
-} from "./lib";
+} from "db";
 import { loginRequired } from "./middlewares";
 import { zValidator as zv } from "@hono/zod-validator";
 import { z } from "zod/v4";
@@ -21,7 +21,10 @@ app.use(
     origin: ["http://localhost:3000"],
     credentials: true,
   }),
-  logger(),
+  logger((message, ...rest) => {
+    const time = new Date().toISOString();
+    console.log(`${time} ${message}`, ...rest);
+  }),
 );
 
 const route = app

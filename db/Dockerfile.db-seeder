@@ -4,11 +4,12 @@ WORKDIR /workspace/db
 
 RUN npm install -g pnpm
 
+# Configure pnpm to use shared store
+RUN echo "store-dir=/pnpm-store" > /workspace/.npmrc
+
 # monorepo root
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml /workspace/
 # monorepo database
 COPY db/package.json db/addTestData.ts /workspace/db/
-
-RUN pnpm install
 
 CMD ["pnpm", "drizzle-kit"]
