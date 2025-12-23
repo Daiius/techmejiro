@@ -12,7 +12,7 @@ export type Impression = ElementType<InferResponseType<typeof honoClient.impress
 export type Tech = ElementType<InferResponseType<typeof honoClient.techs.$get>>;
 export type User = InferResponseType<typeof honoClient.me.$get>;
 
-export type Error =
+export type AppError =
   | { type: "NetworkError", message: string, status: number }
   | { type: "Unauthorized", message: string }
   | { type: "NotFound", message: string }

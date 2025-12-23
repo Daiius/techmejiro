@@ -1,11 +1,11 @@
-import type { Result, Error } from "@/types";
+import type { Result, AppError } from "@/types";
 
 /**
  * Hono RPCのResponseをResult型に変換するヘルパー関数
  */
 export async function fromHonoResponse<T>(
   response: Response
-): Promise<Result<T, Error>> {
+): Promise<Result<T, AppError>> {
   if (!response.ok) {
     if (response.status === 401 || response.status === 403) {
       return {
