@@ -55,17 +55,29 @@ const AnalysisPageContent = async ({ params }: {
     return <div><p>分析データの取得に失敗しました</p></div>
   }
 
+  const allTechs = await getTechs();
+  if (!allTechs.success) {
+    return <div><p>技術マスタの取得に失敗しました</p></div>
+  }
+
   return (
     <div>
       <h2>{selectedTechs.data.map(tech => tech.name).join(", ")}</h2>
-      <div>
-        {analysis.data.map((data, idata) =>
-          <div key={idata} className="flex">
+      <ul className="list">
+        {analysis.data.map(data =>
+          <li key={data.techKey} className="list-row">
             <span>{data.techName}: </span>
+            <div className="flex gap-2">
+              {allTechs.data.find(t => t.key === data.techKey)?.tags.map(t =>
+                <span key={t.key} className="badge badge-outline badge-info text-xs">
+                  {t.name}
+                </span> 
+              )}
+            </div>
             <span>{data.userCount}</span>
-          </div>
+          </li>
         )}
-      </div>
+      </ul>
     </div>
   );
 }
