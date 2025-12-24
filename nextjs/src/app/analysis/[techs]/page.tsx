@@ -96,7 +96,8 @@ const AnalysisPageContent = async ({
             </div>
             <AutoWidthMejiroOshi
               className="list-col-grow"
-              widthStyle={`${(data.userCount / maxUserCount) * 100}%`}
+              // なぜか 100% にすると幅の計算がおかしくなる...
+              widthStyle={`${(data.userCount / maxUserCount) * 99.9}%`}
             />
             <span className="text-2xl">{data.userCount}</span>
           </TechListItem>

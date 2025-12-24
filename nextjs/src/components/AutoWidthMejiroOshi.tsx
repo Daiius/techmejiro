@@ -65,7 +65,7 @@ export const AutoWidthMejiroOshi = ({
   return (
     <div
       ref={containerRef}
-      className={clsx("flex items-end h-32", className)}
+      className={clsx("flex items-end h-32 overflow-hidden", className)}
       style={{ width: widthStyle }}
     >
       {mounted &&
