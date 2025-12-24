@@ -32,6 +32,9 @@ importers:
       drizzle-kit:
         specifier: 1.0.0-beta.2-58a4521
         version: 1.0.0-beta.2-58a4521
+      prettier:
+        specifier: ^3.7.4
+        version: 3.7.4
       tsx:
         specifier: ^4.21.0
         version: 4.21.0
@@ -118,6 +121,9 @@ importers:
       '@types/node':
         specifier: ^20.11.17
         version: 20.19.26
+      prettier:
+        specifier: ^3.7.4
+        version: 3.7.4
       tsx:
         specifier: ^4.7.1
         version: 4.21.0

@@ -52,13 +52,9 @@ export async function addVoteData(
   db: MySql2Database<typeof schema>,
   techMap: Map<string, number>,
   impressionMap: Map<string, number>,
-  params: Partial<VoteDataParams> = {}
+  params: Partial<VoteDataParams> = {},
 ) {
-  const {
-    userCount = 1000,
-    seed = 42,
-    config = DEFAULT_CONFIG,
-  } = params;
+  const { userCount = 1000, seed = 42, config = DEFAULT_CONFIG } = params;
 
   const random = mulberry32(seed);
 
@@ -66,7 +62,7 @@ export async function addVoteData(
   const impressionKeys = Object.keys(config.impressionWeights);
   const totalWeight = Object.values(config.impressionWeights).reduce(
     (sum, w) => sum + w,
-    0
+    0,
   );
 
   // ユーザー生成
