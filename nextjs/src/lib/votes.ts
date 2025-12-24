@@ -15,6 +15,7 @@ export const getVotes = async () => {
 };
 
 export const updateVotes = async (newVotes: Record<string, string>) => {
+  console.log("newVotes: ", newVotes);
   const cookieHeader = await cookies();
   const res = await honoClient.votes.$patch(
     { json: newVotes },
