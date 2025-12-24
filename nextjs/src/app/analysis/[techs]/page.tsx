@@ -84,7 +84,7 @@ const AnalysisPageContent = async ({
       <ul className="list">
         {analysis.data.map((data) => (
           <TechListItem key={data.techKey} techName={data.techName}>
-            <div className="flex gal-2">
+            <div className="flex gap-2">
               {allTechs.data
                 .find((t) => t.name === tech.name)
                 ?.tags.map((t) => (

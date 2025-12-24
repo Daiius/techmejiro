@@ -3,6 +3,7 @@
 import { useVotesForm } from "@/hooks/useVotesForm";
 import type { Vote, Tech, Impression } from "@/types";
 import { CheckIcon } from "./icons/CheckIcon";
+import { TechListItem } from "./TechListItem";
 
 export interface VotesFormClientProps {
   techs: Tech[];
@@ -22,21 +23,24 @@ export const VotesFormClient = ({
     <form>
       <ul className="list">
         {techs.map((tech) => (
+          /*
           <li key={tech.key} className="list-row items-center">
             <div className="flex flex-wrap gap-2">
               <span className="text-xl">{tech.name}</span>
-              <div className="flex flex-wrap gap-1">
-                {tech.tags.map((tag) => (
-                  <span
-                    key={tag.key}
-                    className="badge badge-outline badge-info text-xs text-nowrap"
-                  >
-                    {tag.name}
-                  </span>
-                ))}
-              </div>
             </div>
-            <div className="ml-auto flex flex-col md:flex-row gap-2 md:gap-8">
+            */
+          <TechListItem key={tech.key} techName={tech.name}>
+            <div className="flex flex-wrap gap-2">
+              {tech.tags.map((tag) => (
+                <span
+                  key={tag.key}
+                  className="badge badge-outline badge-info text-xs text-nowrap"
+                >
+                  {tag.name}
+                </span>
+              ))}
+            </div>
+            <div className="ml-auto flex flex-col lg:flex-row gap-2 lg:gap-8">
               {[
                 { key: "unfamiliar", name: "あまり目にしない" },
                 ...impressions,
@@ -71,7 +75,7 @@ export const VotesFormClient = ({
                 <CheckIcon className="size-6 text-success" />
               ) : null}
             </div>
-          </li>
+          </TechListItem>
         ))}
       </ul>
     </form>

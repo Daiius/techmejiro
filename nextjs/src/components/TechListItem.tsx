@@ -6,7 +6,7 @@ export interface TechListItemProps {
 }
 
 export const TechListItem = ({ techName, children }: TechListItemProps) => (
-  <li className="list-row">
+  <li className="list-row items-center">
     <span className="text-2xl">{techName}</span>
     {children}
   </li>
