@@ -3,7 +3,7 @@ import { getVotes } from "@/lib/votes";
 import { getImpressions } from "@/lib/impressions";
 
 import { VotesFormClient } from "@/components/VotesFormClient";
-import {redirect, RedirectType} from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
 
 export const VotesForm = async () => {
   const techsResult = await getTechs();
@@ -21,7 +21,9 @@ export const VotesForm = async () => {
   if (!impressionsResult.success) {
     return (
       <div className="alert alert-error">
-        <span>印象データの取得に失敗しました: {impressionsResult.error.message}</span>
+        <span>
+          印象データの取得に失敗しました: {impressionsResult.error.message}
+        </span>
       </div>
     );
   }

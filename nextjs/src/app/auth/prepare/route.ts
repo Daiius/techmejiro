@@ -17,7 +17,7 @@ function sanitizeNext(raw: string | null): string {
   if (v.includes("\\")) return "/";
   if (!v.startsWith("/")) return "/";
 
-  console.log("redirect target: ", v)
+  console.log("redirect target: ", v);
   // ループ防止（必要に応じて）
   if (v.startsWith("/signin") || v.startsWith("/auth/")) return "/";
 
@@ -29,7 +29,7 @@ function sanitizeNext(raw: string | null): string {
 
 export function GET(req: NextRequest) {
   const next = sanitizeNext(req.nextUrl.searchParams.get("next"));
-  console.log("next redirect path: ", next)
+  console.log("next redirect path: ", next);
 
   // next を URL から消して /signin に戻す（任意）
   const res = NextResponse.redirect(new URL("/signin", req.nextUrl.origin));
