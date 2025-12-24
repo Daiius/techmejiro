@@ -35,6 +35,7 @@ export async function fromHonoResponse<T>(
     const data = (await response.json()) as T;
     return { success: true, data };
   } catch (e) {
+    console.log("error: ", e);
     return {
       success: false,
       error: {

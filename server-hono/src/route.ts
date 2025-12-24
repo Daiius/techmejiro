@@ -69,7 +69,7 @@ const route = app
       const votes = c.req.valid("json");
       await updateVotesByUserId(user.id, votes);
 
-      return c.body(null, 200);
+      return c.json(votes, 200);
     },
   )
   .get("/analysis/single/:techKey", async (c) => {
