@@ -1,19 +1,13 @@
+import type { ReactNode } from "react";
+
 export interface TechListItemProps {
   techName: string;
-  techTags: string[];
+  children?: ReactNode;
 }
 
-export const TechListItem = ({ techName, techTags }: TechListItemProps) => (
+export const TechListItem = ({ techName, children }: TechListItemProps) => (
   <li className="list-row">
-    <div className="flex gap-4">
-      <span>{techName}</span>
-      <div className="flex gap-2">
-        {techTags.map((tag) => (
-          <span key={tag} className="badge badge-outline badge-info text-xs">
-            {tag}
-          </span>
-        ))}
-      </div>
-    </div>
+    <span className="text-2xl">{techName}</span>
+    {children}
   </li>
 );

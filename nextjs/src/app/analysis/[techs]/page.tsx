@@ -3,6 +3,8 @@ import { getTechs } from "@/lib/techs";
 import { redirect } from "next/navigation";
 import type { Tech, Result, AppError } from "@/types";
 import { getAnalysisBySingleTech } from "@/lib/analysis";
+import { TechListItem } from "@/components/TechListItem";
+import { TechLabel } from "@/components/TechLabel";
 
 const getTechsOrRedirect = async (
   techsParam: string,
@@ -81,22 +83,16 @@ const AnalysisPageContent = async ({
       <h2>{selectedTechs.data.map((tech) => tech.name).join(", ")}</h2>
       <ul className="list">
         {analysis.data.map((data) => (
-          <li key={data.techKey} className="list-row">
-            <span>{data.techName}: </span>
-            <div className="flex gap-2">
+          <TechListItem key={data.techKey} techName={data.techName}>
+            <div className="flex gal-2">
               {allTechs.data
-                .find((t) => t.key === data.techKey)
+                .find((t) => t.name === tech.name)
                 ?.tags.map((t) => (
-                  <span
-                    key={t.key}
-                    className="badge badge-outline badge-info text-xs"
-                  >
-                    {t.name}
-                  </span>
+                  <TechLabel key={t.key} label={t.name} />
                 ))}
             </div>
-            <span>{data.userCount}</span>
-          </li>
+            <span className="text-2xl">{data.userCount}</span>
+          </TechListItem>
         ))}
       </ul>
     </div>
