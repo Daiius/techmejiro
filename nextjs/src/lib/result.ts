@@ -6,19 +6,19 @@ import type { ClientResponse } from "hono/client";
  * ClientResponseの型パラメータから正しい型を推論します
  */
 export async function fromHonoResponse<T>(
-  response: ClientResponse<T>
+  response: ClientResponse<T>,
 ): Promise<Result<T, AppError>> {
   if (!response.ok) {
     if (response.status === 401 || response.status === 403) {
       return {
         success: false,
-        error: { type: "Unauthorized", message: "認証が必要です" }
+        error: { type: "Unauthorized", message: "認証が必要です" },
       };
     }
     if (response.status === 404) {
       return {
         success: false,
-        error: { type: "NotFound", message: "リソースが見つかりません" }
+        error: { type: "NotFound", message: "リソースが見つかりません" },
       };
     }
     return {
@@ -26,21 +26,21 @@ export async function fromHonoResponse<T>(
       error: {
         type: "NetworkError",
         message: `Request failed: ${response.statusText}`,
-        status: response.status
-      }
+        status: response.status,
+      },
     };
   }
 
   try {
-    const data = await response.json() as T;
+    const data = (await response.json()) as T;
     return { success: true, data };
   } catch (e) {
     return {
       success: false,
       error: {
         type: "ParseError",
-        message: "レスポンスの解析に失敗しました"
-      }
+        message: "レスポンスの解析に失敗しました",
+      },
     };
   }
 }
