@@ -40,7 +40,7 @@ export const VotesFormClient = ({
                 </span>
               ))}
             </div>
-            <div className="ml-auto flex flex-col lg:flex-row gap-2 lg:gap-8">
+            <div className="flex flex-col lg:flex-row gap-2 lg:gap-8">
               {[
                 { key: "unfamiliar", name: "あまり目にしない" },
                 ...impressions,
@@ -64,7 +64,7 @@ export const VotesFormClient = ({
                       }
                     }}
                   />
-                  <span>{impression.name}</span>
+                  <span className="text-lg">{impression.name}</span>
                 </label>
               ))}
             </div>
