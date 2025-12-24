@@ -5,6 +5,7 @@ import type { Tech, Result, AppError } from "@/types";
 import { getAnalysisBySingleTech } from "@/lib/analysis";
 import { TechListItem } from "@/components/TechListItem";
 import { TechLabel } from "@/components/TechLabel";
+import { AutoWidthMejiroOshi } from "@/components/AutoWidthMejiroOshi";
 
 const getTechsOrRedirect = async (
   techsParam: string,
@@ -78,6 +79,8 @@ const AnalysisPageContent = async ({
     );
   }
 
+  const maxUserCount = Math.max(...analysis.data.map((a) => a.userCount));
+
   return (
     <div>
       <h2>{selectedTechs.data.map((tech) => tech.name).join(", ")}</h2>
@@ -91,6 +94,11 @@ const AnalysisPageContent = async ({
                   <TechLabel key={t.key} label={t.name} />
                 ))}
             </div>
+            <AutoWidthMejiroOshi
+              className="list-col-grow"
+              // なぜか 100% にすると幅の計算がおかしくなる...
+              widthStyle={`${(data.userCount / maxUserCount) * 99.9}%`}
+            />
             <span className="text-2xl">{data.userCount}</span>
           </TechListItem>
         ))}
