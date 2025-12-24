@@ -74,9 +74,7 @@ await db.insert(impressions).values([
 
 // インプレッションのマップを作成
 const allImpressions = await db.select().from(impressions);
-const impressionMap = new Map(
-  allImpressions.map((imp) => [imp.key, imp.id])
-);
+const impressionMap = new Map(allImpressions.map((imp) => [imp.key, imp.id]));
 
 // テストユーザーと投票データを挿入
 // デフォルトでは1000ユーザー、シード値42でランダムデータを生成
