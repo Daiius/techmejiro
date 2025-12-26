@@ -1,12 +1,9 @@
 import { db } from "./db";
-import {
-  votes,
-  techs,
-} from "./db/schema";
+import { votes, techs } from "./db/schema";
 import { sql, eq, and, inArray, not, desc } from "drizzle-orm";
 import createDebug from "debug";
 
-const debug = createDebug("techmejiro:db:DEBUG")
+const debug = createDebug("techmejiro:db:DEBUG");
 
 const techKeyToId: { [techKey: string]: number } = Object.fromEntries(
   (
@@ -25,7 +22,7 @@ const impressionKeyToId: { [impressionKey: string]: number } =
 
 export const getTechs = async () =>
   await db.query.techs.findMany({
-    columns: { key: true, name: true },
+    columns: { key: true, name: true, url: true },
     with: {
       tags: true,
     },
@@ -75,9 +72,9 @@ export const updateVotesByUserId = async (
       });
   }
 
-  const toDelete = Object.entries(newVotes).filter(
-    ([_, impression]) => !(impression in impressionKeyToId),
-  ).map(([techKey, _]) => techKey);
+  const toDelete = Object.entries(newVotes)
+    .filter(([_, impression]) => !(impression in impressionKeyToId))
+    .map(([techKey, _]) => techKey);
   await db.delete(votes).where(
     and(
       eq(votes.userId, userId),
@@ -90,12 +87,12 @@ export const updateVotesByUserId = async (
 };
 
 export const getAnalysisByTechKey = async (techKey: string) => {
-  debug('getAnalysisByTechKey started...');
+  debug("getAnalysisByTechKey started...");
   const relatedVotes = await db
     .select({
       techKey: techs.key,
       techName: techs.name,
-      userCount: sql<number>`count(distinct ${votes.userId})`.as('user_count'),
+      userCount: sql<number>`count(distinct ${votes.userId})`.as("user_count"),
     })
     .from(votes)
     .innerJoin(techs, eq(votes.techId, techs.id))
@@ -110,8 +107,8 @@ export const getAnalysisByTechKey = async (techKey: string) => {
     .groupBy(votes.techId, techs.key, techs.name)
     .orderBy(desc(sql`user_count`));
 
-  debug('getAnalysisByTechKey done.');
+  debug("getAnalysisByTechKey done.");
   debug(`relatedVotes to ${techKey}:`, relatedVotes);
 
   return relatedVotes;
-}
+};
