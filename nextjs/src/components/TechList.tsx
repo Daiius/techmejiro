@@ -1,8 +1,14 @@
+import { clsx } from "clsx";
+
 import { getTechs } from "@/lib/techs";
 import { TechListItem } from "./TechListItem";
 import { TechLabel } from "./TechLabel";
 
-export const TechList = async () => {
+export interface TechListProps {
+  className?: string;
+}
+
+export const TechList = async ({ className }: TechListProps) => {
   "use cache";
   const techsResult = await getTechs();
 
@@ -17,7 +23,7 @@ export const TechList = async () => {
   const techs = techsResult.data;
 
   return techs.length > 0 ? (
-    <ul className="list">
+    <ul className={clsx("list", className)}>
       {techs.map((tech) => (
         <TechListItem key={tech.key} techName={tech.name} techUrl={tech.url}>
           <div className="flex gap-2">

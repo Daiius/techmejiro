@@ -34,7 +34,7 @@ export const TechmejiroIcon = (props: SVGProps<SVGSVGElement>) => (
       strokeLinecap="round"
       strokeLinejoin="round"
       paintOrder="markers stroke fill"
-      vectorEffect="non-scaling-stroke"
+      //vectorEffect="non-scaling-stroke"
     />
     <ellipse
       cx={35.922}
@@ -73,13 +73,13 @@ export const TechmejiroIcon = (props: SVGProps<SVGSVGElement>) => (
       strokeLinecap="round"
       strokeLinejoin="round"
       paintOrder="markers stroke fill"
-      vectorEffect="non-scaling-stroke"
+      //vectorEffect="non-scaling-stroke"
     />
     <path
       d="M25 51c4.43 7.382-5.625 35.646-15 28.939C.512 73.15 4.734 49.634 4.734 49.634L15 46s5.498-2.504 10 5"
       fill="#00da21"
       paintOrder="markers stroke fill"
-      vectorEffect="non-scaling-stroke"
+      //vectorEffect="non-scaling-stroke"
     />
     <path
       d="M25 51c4.43 7.382-5.625 35.646-15 28.939C.512 73.15 4.514 49.413 4.514 49.413"
@@ -89,7 +89,7 @@ export const TechmejiroIcon = (props: SVGProps<SVGSVGElement>) => (
       strokeLinecap="round"
       strokeLinejoin="round"
       paintOrder="markers stroke fill"
-      vectorEffect="non-scaling-stroke"
+      //vectorEffect="non-scaling-stroke"
     />
     <circle
       cx={40}
