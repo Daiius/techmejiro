@@ -26,6 +26,7 @@ export const techs = mysqlTable(
     id: bigint("id", { mode: "number" }).autoincrement().primaryKey(),
     key: varchar("key", { length: 32 }).notNull(),
     name: varchar("name", { length: 64 }).notNull(),
+    url: varchar("url", { length: 256 }).notNull(),
   },
   (table) => [unique("techs_key_idx").on(table.key)],
 );

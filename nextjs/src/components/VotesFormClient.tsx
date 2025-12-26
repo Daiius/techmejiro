@@ -29,7 +29,7 @@ export const VotesFormClient = ({
               <span className="text-xl">{tech.name}</span>
             </div>
             */
-          <TechListItem key={tech.key} techName={tech.name}>
+          <TechListItem key={tech.key} techName={tech.name} techUrl={tech.url}>
             <div className="flex flex-wrap gap-2">
               {tech.tags.map((tag) => (
                 <span

@@ -82,14 +82,23 @@ const AnalysisPageContent = async ({
   const maxUserCount = Math.max(...analysis.data.map((a) => a.userCount));
 
   return (
-    <div>
-      <h2>{selectedTechs.data.map((tech) => tech.name).join(", ")}</h2>
+    <div className="flex flex-col">
+      <h2 className="text-6xl self-center">
+        <span>{selectedTechs.data.map((tech) => tech.name).join(" & ")}</span>
+        <span> & ...</span>
+      </h2>
       <ul className="list">
         {analysis.data.map((data) => (
-          <TechListItem key={data.techKey} techName={data.techName}>
+          <TechListItem
+            key={data.techKey}
+            techName={data.techName}
+            techUrl={
+              allTechs.data.find((t) => t.key === data.techKey)?.url ?? ""
+            }
+          >
             <div className="flex gap-2">
               {allTechs.data
-                .find((t) => t.name === tech.name)
+                .find((t) => t.key === data.techKey)
                 ?.tags.map((t) => (
                   <TechLabel key={t.key} label={t.name} />
                 ))}
